@@ -1,19 +1,15 @@
 import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback,Button,TextInput,TouchableOpacity,value,View } from 'react-native';
+import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback, Button, TextInput, TouchableOpacity, value, View } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 import axios from 'axios'
-
 import materialTheme from '../constants/Theme';
-
 const { width } = Dimensions.get('screen');
-
-
 class Product extends React.Component {
   state = {
     counter: 0,
-    comment : "",
-    data:[]
+    comment: "",
+    data: []
   }
   onIncrement = () => {
     this.setState({
@@ -21,31 +17,29 @@ class Product extends React.Component {
     })
     console.log(this.state.counter)
   };
-//   onChange = event => {
-//     this.setState({comment:})
-// }
-postcomment=()=>{
-  axios.post('http:// 172.20.10.14:3000/api/items/postcomment',{des:this.state.comment}).then((data)=>{
-    console.log(data)
-  })
-}
-componentDidMount() {
-   
-  axios.get('http://172.20.10.14:3000/api/items/getcomment').then((data)=>{
-     console.log(data.data)
-     this.setState({
-       data:data.data
-     })
-    //  alert(data)
-})
- 
-}
- 
-
+  onChangeText = (key, val) => {
+    this.setState({ [key]: val })
+  }
+  postcomment = () => {
+    let options = {
+      des: this.state.comment
+    }
+    axios.post('http://192.168.22.185:3000/api/items/postcomment', options).then((data) => {
+      console.log(data)
+    })
+  }
+  componentDidMount() {
+    axios.get('http://192.168.22.185:3000/api/items/getcomment').then((data) => {
+      console.log(data.data)
+      this.setState({
+        data: data.data
+      })
+      // alert(data)
+    })
+  }
   render() {
     const { navigation, product, horizontal, full, style, priceColor, imageStyle } = this.props;
     const imageStyles = [styles.image, full ? styles.fullImage : styles.horizontalImage, imageStyle];
-
     return (
       <Block row={horizontal} card flex style={[styles.product, styles.shadow, style]}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Profile', { product: product })}>
@@ -57,30 +51,26 @@ componentDidMount() {
           <Block flex space="between" style={styles.productDescription}>
             <Text size={14} style={styles.productTitle}>{product.title}</Text>
             <Text size={12} muted={!priceColor} color={priceColor}>${product.price}</Text>
-          
-            <Button 
-            title="Like"  onPress={this.onIncrement}/>
-            <TextInput style = {styles.input} name={this.state.comment} />
+            {this.state.data.map((elem) => {
+              <Text>{elem.des}</Text>
+            })}
+            <Button
+              title="Like" onPress={this.onIncrement} />
+            <TextInput style={styles.input} onChangeText={val => this.onChangeText('comment', val)}
+            />
             <TouchableOpacity
-            style = {styles.submitButton} 
-            
+              style={styles.submitButton}
             >
-            <Text style = {styles.submitButtonText} onPress={this.postcomment}> Submit </Text></TouchableOpacity>
+              <Text style={styles.submitButtonText} onPress={this.postcomment}> Submit </Text></TouchableOpacity>
           </Block>
-
         </TouchableWithoutFeedback>
         <View>
-        {this.state.data.map((elem)=>{
-          <Text>{elem.des}</Text>
-        })}
         </View>
       </Block>
     );
   }
 }
-
 export default withNavigation(Product);
-
 const styles = StyleSheet.create({
   product: {
     backgroundColor: theme.COLORS.WHITE,
@@ -93,15 +83,14 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     height: 40,
-    width:80
- },
-
+    width: 80
+  },
   input: {
     margin: 15,
     height: 40,
     borderColor: '#7a42f4',
     borderWidth: 1
- },
+  },
   productTitle: {
     flex: 1,
     flexWrap: 'wrap',

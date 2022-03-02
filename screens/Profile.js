@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Dimensions, ScrollView, Image, ImageBackground, Platform,Button } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios'
 
 import { Icon } from '../components';
 import { Images, materialTheme } from '../constants';
@@ -11,6 +12,11 @@ const { width, height } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
 
 export default class Profile extends React.Component {
+  componentDidMount(){
+    return axios.get("http://192.168.22.185:3000/api/posts/getpost").then((data)=>{
+      console.log(data);
+    })
+  }
   render() {
     return (
       <Block flex style={styles.profile}>

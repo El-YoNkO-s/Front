@@ -1,41 +1,25 @@
 import React,{useState} from "react";
-import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView} from "react-native"
+import axios from "axios";
+import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView } from "react-native"
 import Logo from "../assets/images/myLogo.png"
-import CustomInput from "../components/customInput/CustomInput"; 
+import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
-import axios from "axios"
-import * as Google from "expo-google-app-auth"
- const signIn = async () => {
-    try {
-      const result = await Google.logInAsync({
-        issuer: 'https://accounts.google.com',
-        scopes: ['profile'],
-        clientId: '295876176566-mc96ntau86p40omucvf52nu314u29upn.apps.googleusercontent.com',
-        iosId:"295876176566-m1a1tdb4kr26k54qs81p2d6hjtorlhqc.apps.googleusercontent.com"
-      });
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-      if (result.type === "success") {
-        this.setState({
-          signedIn: true,
-          username: result.user.name,
-          photoUrl: result.user.photoUrl
-        })
-      } else {
-        console.log("cancelled")
-      }
-    } catch (err) {
-      console.log("error", err)
-    }
-  }
-
+// import { NavigationActions } from "@react-navigation/compat";
 const SignIn = ()=>{
-  
-   const [Email,setUsername]=useState("");
    const [password,setPassword]=useState("");
+   const [email, setEmail] = useState("");
    const {height}=useWindowDimensions();
    const onSignInPressed =()=>{
-     console.warn("Sign in")
-   }
+    axios
+    .post("http://192.168.22.185:3000/api/user/login", {
+      password,
+      email
+    })
+    .then((response) => console.log('logiin',response))
+    .catch((err) => console.log(err));
+};
    const onForgetPassword=()=>{
      console.warn("forget")
    }
@@ -45,40 +29,45 @@ const SignIn = ()=>{
   const onSignUpPressed=()=>{
     console.warn("onSignUpPress");
   }
-  const GetSing = ()=>{
-    axios.post('http://172.20.10.14:3000/api/user/signIn',{email:Email,password:password}).then((data)=>{
-      console.log("Welcom",data)
-    }).catch((error)=>{
-      console.log("soory",error)
-    })
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem(response, jsonValue)
+    } catch (e) {
+      // saving error
+    }
   }
+  
+  
+  
   return (
     <ScrollView>
     <View style={styles.root}>
       <Image
-      source={Logo} 
+      source={Logo}
        style={[styles.Logo,{height:height * 0.3}]}
        resizeMode="contain"
        />
-    <CustomInput 
-    placeholder="Email"
-    value={Email}
+    {/* <CustomInput
+    placeholder="username"
+    value={username}
     setValue ={setUsername}
-    />
+    /> */}
+    <CustomInput placeholder="email" value={email} setValue={setEmail} />
     <CustomInput
     placeholder="password"
     value={password}
     setValue ={setPassword}
     secureTextEntry={true}
     />
-    <CustomButton text="Sign In" onPress={GetSing}/>
-    <CustomButton 
+    <CustomButton text="Sign In" onPress={onSignInPressed}/>
+    <CustomButton
     text="Forgot password"
      onPress={onForgetPassword}
      type="TERTIARY"
      />
-     <CustomButton text="Sign In with Google" onPress={signIn} bgColor="#FAE9EA"fgColor="#DD4D44"/>
-     <CustomButton 
+     <CustomButton text="Sign In with Google" onPress={onSignInGooglePressed} bgColor="#FAE9EA"fgColor="#DD4D44"/>
+     <CustomButton
     text="you don t have an acount ? Create one"
      onPress={onSignUpPressed}
      type="TERTIARY"
