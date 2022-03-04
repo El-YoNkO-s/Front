@@ -60,7 +60,7 @@ export default class Profile extends React.Component {
               </Block>
               <Block middle>
                 <Text bold size={12} style={{marginBottom: 8}}>5</Text>
-                <Text muted size={12}>Bids & Offers</Text>
+                <Text muted size={12}>Bids Offers</Text>
                 
               </Block>
               <Block middle>

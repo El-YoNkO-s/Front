@@ -382,7 +382,7 @@ const HomeStack = createStackNavigator({
     screen: ProScreen,
     navigationOptions: ({navigation}) => ({
       header: <Header back white transparent title="" navigation={navigation} />,
-      headerTransparent: true,
+      headerTransparent: t    vc    vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv   vc    cv v cv vc  v vc vc rue,
     })
   },
 },

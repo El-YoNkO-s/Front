@@ -23,10 +23,11 @@ export default function ImagePickerExample() {
       setImage(result.uri);
     }
   };
-  const sentpost=()=> {
-    axios.post("http://192.168.22.185:3000/api/posts/Post",{
+  const sentpost=(props)=> {
+    axios.post("http://192.168.22.236:3000/api/posts/Post",{
       post:text,
-      picture:image
+      picture:image,
+      id_User:props
     })
     .then((response)=>{
       console.log(response);

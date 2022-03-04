@@ -1,33 +1,43 @@
 import React, { useState } from "react";
 import axios from "axios";
 import DatePicker from "react-native-datepicker";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
+  onPress
 } from "react-native";
 import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
+// import ImagePicker from "react-native-image-picker"
+import * as ImagePicker from 'expo-image-picker';
 const SignUp = () => {
+ 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
-  const [phone_number, setPhone_number] = useState();
+  const [phone_number, setPhone_number] = useState(null);
   const [categorie, setCategorie] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [picture,setPicture]=useState(0)
+  const navigation = useNavigation();
+
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.22.185:3000/api/user/register", {
+      .post("http://192.168.22.236:3000/api/user/register", {
         username,
         password,
         email,
         phone_number,
         categorie,
         birthday,
+        picture
+        
       })
-      .then(() => console.log("registreed"))
+      .then(() => navigation.navigate("Profile"))
       .catch((err) => console.log(err));
   };
   const onForgetPassword = () => {
@@ -36,16 +46,30 @@ const SignUp = () => {
   const onSignInGooglePressed = () => {
     console.warn("sign in");
   };
-  const onSignUpPressed = () => {
-    console.warn("onSignUpPress");
-  };
+  const choosePhoto = async () => {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result);
+  
+      if (!result.cancelled) {
+        setPicture(result.uri);
+      }
+    };
   const onTermpress = () => {
     console.warn("on T press");
   };
   const onPrivacypress = () => {
     console.warn("on P press");
   };
-  // console.log(birthday, "birthdayyyyyyyyyyyyyyyyyyy");
+
+
+  
   return (
     <ScrollView>
       <View style={styles.root}>
@@ -80,14 +104,14 @@ const SignUp = () => {
         />
         <DatePicker
           style={{ width: "100%" }}
-          date={birthday}
           placeholder="Select Date"
           format="DD-MM-YYYY"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
-          value={birthday}
-          setValue={setBirthday}
+          date={birthday}
+          onDateChange={(d)=> setBirthday(d)}
         />
+        <CustomButton text="Choose Photo" onPress={choosePhoto} />
         <CustomButton text="Register" onPress={onRegisterPressed} />
         <Text style={styles.text}>
           By registering, you confirm that you accept our{" "}
@@ -101,22 +125,15 @@ const SignUp = () => {
             Privacy Policy{" "}
           </Text>{" "}
         </Text>
-        <CustomButton
-          text="Forgot password"
-          onPress={onForgetPassword}
-          type="TERTIARY"
-        />
+       
         <CustomButton
           text="Sign In with Google"
           onPress={onSignInGooglePressed}
           bgColor="#FAE9EA"
           fgColor="#DD4D44"
         />
-        <CustomButton
-          text="you don t have an acount ? Create one"
-          onPress={onSignUpPressed}
-          type="TERTIARY"
-        />
+        
+        
       </View>
     </ScrollView>
   );
@@ -140,4 +157,5 @@ const styles = StyleSheet.create({
     color: "#FDB075",
   },
 });
+
 export default SignUp;

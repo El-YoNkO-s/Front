@@ -9,7 +9,8 @@ class Product extends React.Component {
   state = {
     counter: 0,
     comment: "",
-    data: []
+    data: [],
+    postdata:[]
   }
   onIncrement = () => {
     this.setState({
@@ -24,17 +25,25 @@ class Product extends React.Component {
     let options = {
       des: this.state.comment
     }
-    axios.post('http://192.168.22.185:3000/api/items/postcomment', options).then((data) => {
+    axios.post('http://192.168.22.236:3000/api/items/postcomment', options).then((data) => {
       console.log(data)
     })
   }
   componentDidMount() {
-    axios.get('http://192.168.22.185:3000/api/items/getcomment').then((data) => {
+    return axios.get('http://192.168.22.236:3000/api/items/getcomment').then((data) => {
       console.log(data.data)
       this.setState({
         data: data.data
       })
       // alert(data)
+    })
+  }
+  componentDidMount() {
+     axios.get('http://192.168.22.236:3000/api/posts/getpost').then((result) => {
+      console.log(result.data)
+      this.setState({
+        postdata: result.data
+      })
     })
   }
   render() {
@@ -44,15 +53,20 @@ class Product extends React.Component {
       <Block row={horizontal} card flex style={[styles.product, styles.shadow, style]}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Profile', { product: product })}>
           <Block flex style={[styles.imageContainer, styles.shadow]}>
-            <Image source={{ uri: product.image }} style={imageStyles} />
+          {this.state.postdata.map((elem) => {
+            return(  
+              <View>
+              <Image style={{ height: 220,width:220}} source={{uri: elem.picture}}/>
+               <Text>{elem.post}</Text>
+               </View>
+               )
+           })}
           </Block>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro', { product: product })}>
           <Block flex space="between" style={styles.productDescription}>
-            <Text size={14} style={styles.productTitle}>{product.title}</Text>
-            <Text size={12} muted={!priceColor} color={priceColor}>${product.price}</Text>
             {this.state.data.map((elem) => {
-              <Text>{elem.des}</Text>
+             return  <Text>{elem.des}</Text>
             })}
             <Button
               title="Like" onPress={this.onIncrement} />
@@ -79,7 +93,7 @@ const styles = StyleSheet.create({
     minHeight: 114,
   },
   submitButton: {
-    backgroundColor: '#7a42f4',
+    backgroundColor: '#7A42F4',
     padding: 10,
     margin: 5,
     height: 40,
@@ -88,7 +102,7 @@ const styles = StyleSheet.create({
   input: {
     margin: 15,
     height: 40,
-    borderColor: '#7a42f4',
+    borderColor: '#7A42F4',
     borderWidth: 1
   },
   productTitle: {
@@ -127,3 +141,12 @@ const styles = StyleSheet.create({
     left: 21
   }
 });
+
+
+
+
+
+
+
+
+
