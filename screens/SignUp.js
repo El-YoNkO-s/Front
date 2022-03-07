@@ -23,11 +23,12 @@ const SignUp = () => {
   const [categorie, setCategorie] = useState("");
   const [birthday, setBirthday] = useState("");
   const [picture,setPicture]=useState(0)
+  const [datause,setdatause] = useState([])
   const navigation = useNavigation();
 
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.22.236:3000/api/user/register", {
+      .post("http://172.20.10.14:3000/api/user/register", {
         username,
         password,
         email,

@@ -12,9 +12,21 @@ const { width, height } = Dimensions.get('screen');
 const thumbMeasure = (width - 48 - 32) / 3;
 
 export default class Profile extends React.Component {
+  state = {
+    user: []
+  }
   componentDidMount(){
     return axios.get("http://192.168.22.185:3000/api/posts/getpost").then((data)=>{
       console.log(data);
+      this.setState({ user: data})
+    })
+  }
+
+  userdata=()=>{
+    AsyncStorage.setItem("res.data", JSON.stringify).then((data)=>{
+      console.log(data);
+    }).catch((err)=>{
+      console.error(err);
     })
   }
   render() {

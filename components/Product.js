@@ -10,7 +10,9 @@ class Product extends React.Component {
     counter: 0,
     comment: "",
     data: [],
-    postdata:[]
+    postdata: [],
+    commentid: [],
+
   }
   onIncrement = () => {
     this.setState({
@@ -21,31 +23,37 @@ class Product extends React.Component {
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
   }
-  postcomment = () => {
-    let options = {
-      des: this.state.comment
-    }
-    axios.post('http://192.168.22.236:3000/api/items/postcomment', options).then((data) => {
-      console.log(data)
-    })
-  }
+  
+
   componentDidMount() {
-    return axios.get('http://192.168.22.236:3000/api/items/getcomment').then((data) => {
-      console.log(data.data)
-      this.setState({
-        data: data.data
+    axios.get('http://192.168.22.241:3000/api/posts/getpost').then((result) => {
+      // console.log(result.data);
+      var s = result.data
+      // console.log(s)
+      s.map((elem)=>{
+        console.log(elem.id_Post)
       })
-      // alert(data)
-    })
-  }
-  componentDidMount() {
-     axios.get('http://192.168.22.236:3000/api/posts/getpost').then((result) => {
-      console.log(result.data)
       this.setState({
         postdata: result.data
       })
     })
+    axios.get("http://192.168.22.241:3000/api/items/getcomment/1").then((response) => {
+      console.log(response)
+      this.setState({
+        commentid:response.data
+      })
+    })
   }
+  postcomment = () => {
+    let options = {
+      des: this.state.comment,
+      id_Post:this.state.postdata[0].id_Post
+    }
+    axios.post('http://192.168.22.241:3000/api/items/postcomment',options).then((response) => {
+      console.log(response)
+    })
+  }
+  
   render() {
     const { navigation, product, horizontal, full, style, priceColor, imageStyle } = this.props;
     const imageStyles = [styles.image, full ? styles.fullImage : styles.horizontalImage, imageStyle];
@@ -53,29 +61,32 @@ class Product extends React.Component {
       <Block row={horizontal} card flex style={[styles.product, styles.shadow, style]}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Profile', { product: product })}>
           <Block flex style={[styles.imageContainer, styles.shadow]}>
-          {this.state.postdata.map((elem) => {
-            return(  
-              <View>
-              <Image style={{ height: 220,width:220}} source={{uri: elem.picture}}/>
-               <Text>{elem.post}</Text>
-               </View>
-               )
-           })}
+            {this.state.postdata.map((elem) => {
+              return (
+                <View>
+                {this.state.commentid.map((elem) => {
+                  return <Text>{elem.des}</Text>
+                })}
+                  <Text style={{borderWidth:19}}>{elem.post}</Text>
+                  <Image style={{ height: 300, width: 300 }} source={{ uri: elem.picture }} />
+                  
+                  <Button
+                    title="Like" onPress={this.onIncrement} />
+                  <TextInput style={styles.input} onChangeText={val => this.onChangeText('comment', val)}
+                  />
+                  <TouchableOpacity style={styles.submitButton}>
+                  <Text style={styles.submitButtonText} onPress={this.postcomment}> Submit </Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            })}
           </Block>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro', { product: product })}>
           <Block flex space="between" style={styles.productDescription}>
-            {this.state.data.map((elem) => {
-             return  <Text>{elem.des}</Text>
-            })}
-            <Button
-              title="Like" onPress={this.onIncrement} />
-            <TextInput style={styles.input} onChangeText={val => this.onChangeText('comment', val)}
-            />
-            <TouchableOpacity
-              style={styles.submitButton}
-            >
-              <Text style={styles.submitButtonText} onPress={this.postcomment}> Submit </Text></TouchableOpacity>
+           
+         
+
           </Block>
         </TouchableWithoutFeedback>
         <View>
@@ -141,6 +152,7 @@ const styles = StyleSheet.create({
     left: 21
   }
 });
+
 
 
 

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Button, Image, View, Platform, ScrollView, StyleSheet, TextInput ,Alert,SafeAreaView} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios'
-
 export default function ImagePickerExample() {
+
   const [image, setImage] = useState(null);
   const [text, setText] = useState('');
-  
+  const [imageselected,setimageselected]= useState("")
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -22,19 +22,28 @@ export default function ImagePickerExample() {
     if (!result.cancelled) {
       setImage(result.uri);
     }
+
+
   };
-  const sentpost=(props)=> {
-    axios.post("http://192.168.22.236:3000/api/posts/Post",{
+  const sentpost=()=> {
+    axios.post("http://192.168.22.241:3000/api/posts/Post",{
       post:text,
       picture:image,
-      id_User:props
     })
     .then((response)=>{
       console.log(response);
     })
   }
 
-  
+  // const uploadImage = (image)=>{
+  //   const formdata = new FormData();
+  //   formdata.append("file",image[0])
+  //   formdata.append("upload_preset","tnjoxxs1")
+
+  //   axios.post("https://api.cloudinary.com/v1_1/ihebmoujahed/image/upload",formdata).then(response=>{
+  //     console.log(response);
+  //   })
+  // }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,4 +80,3 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   }
 })
-

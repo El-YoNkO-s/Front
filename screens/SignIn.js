@@ -6,24 +6,29 @@ import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
 import * as Google from 'expo-google-app-auth';
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import { NavigationActions } from "@react-navigation/compat";
 const SignIn = ()=>{
+  const [userdata,setuserdata] =useState([])
    const [password,setPassword]=useState("");
    const [email, setEmail] = useState("");
    const {height}=useWindowDimensions();
    const navigation = useNavigation();
-   const onSignInPressed =()=>{
-    axios
-    .post("http://192.168.22.236:3000/api/user/login", {
+   const onSignInPressed = ()=>{
+     axios
+    .post("http://192.168.22.241:3000/api/user/login", {
       password,
       email
     })
-    .then((res)=>{
+    .then ((res)=>{
       if(res.data ==="Email or password is incorrect!"){
         console.log(res.result)
-        console.warn("wrong password or email")
-      }else{
+        console.log("wrong password or email")
+      }else {
+        AsyncStorage.getItem('res').then((datttt)=>{  
+          console("eee",datttt)
+        })
         navigation.navigate("Profile")
       }
     }).catch((err)=>console.log(err))
@@ -31,9 +36,11 @@ const SignIn = ()=>{
 
 };
    
-   const onForgetPassword=()=>{
-     console.warn("forget")
-   }
+   const onForgetPassword= ()=>{
+     var items = AsyncStorage.getItem('@store1:user').then((res)=>{
+       console.log(items)
+     })
+  }
    const onSignInGooglePressed= async ()=>{
     try {
       const result = await Google.logInAsync({
@@ -54,7 +61,7 @@ const SignIn = ()=>{
   const onSignUpPressed=()=>{
     console.warn("onSignUpPress");
   }
-  
+
   return (
     <ScrollView>
     <View style={styles.root}>
