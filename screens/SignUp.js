@@ -1,137 +1,178 @@
-import React,{useState} from "react";
-import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView,Picker} from "react-native"
-import Logo from "../assets/images/myLogo.png"
-import CustomInput from "../components/customInput/CustomInput"; 
+import React, { useState } from "react";
+import axios from "axios";
+import DatePicker from "react-native-datepicker";
+import { useNavigation } from "@react-navigation/native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  onPress,
+  
+} from "react-native";
+import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
-import * as Google from "expo-google-app-auth"
+// import ImagePicker from "react-native-image-picker"
+import * as ImagePicker from 'expo-image-picker';
+const SignUp = () => {
+ 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [phone_number, setPhone_number] = useState(null);
+  const [categorie, setCategorie] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [picture,setPicture]=useState(0)
+  const [datause,setdatause] = useState([])
+  const navigation = useNavigation();
 
-import axios from "axios"
- const signIn = async () => {
-    try {
-      const result = await Google.logInAsync({
-        issuer: 'https://accounts.google.com',
-        scopes: ['profile'],
-        clientId: '295876176566-mc96ntau86p40omucvf52nu314u29upn.apps.googleusercontent.com',
-        iosId:"295876176566-m1a1tdb4kr26k54qs81p2d6hjtorlhqc.apps.googleusercontent.com"
-      });
-
-      if (result.type === "success") {
+  const onRegisterPressed = () => {
+    axios
+      .post("http://192.168.22.241:3000/api/user/register", {
+        username,
+        password,
+        email,
+        phone_number,
+        categorie,
+        birthday,
+        picture
         
-          signedIn: true,
-          Username= result.user.name
-          // photoUrl: result.user.photoUrl
-      } else {
-        console.log("cancelled")
+      })
+      .then((response) => navigation.navigate("SignIn"))
+      .catch((err) => console.log(err));
+  };
+  const onForgetPassword = () => {
+    console.warn("forget");
+  };
+  const onSignInGooglePressed = 
+    async ()=>{
+      try {
+        const result = await Google.logInAsync({
+          androidClientId: "43341331951-lvkbfsn9refima4il5cd3sh3c41o946a.apps.googleusercontent.com",
+          iosClientId: "43341331951-idk530b0a5e2t8r2fu4hhljspq0srmne.apps.googleusercontent.com",
+          scopes: ['profile', 'email'],
+        });
+    
+        if (result.type === 'success') {
+          return result.accessToken;
+        } else {
+          return { cancelled: true };
+        }
+      } catch (e) {
+        return { error: true };
       }
-    } catch (err) {
-      console.log("error", err)
-    }
-    axios.post('http://172.20.10.14:3000/api/user/signUp',{firstName:Username}).then((data)=>{
-      console.log("success", data)
-    }).catch((error)=>{
-      console.error("error", error)
-    })
-  }
-
-const SignIn = ()=>{
+    };
+  const choosePhoto = async () => {
+      // No permissions request is necessary for launching the image library
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
   
-   const [FirstName, setFirstName]=useState("");
-   const [Username]=useState("");
-   const [LastName, setLastName]=useState("");
-   const [Email, setEmail]=useState("");
-   const [PhoneNumber, setPhoneNumber]=useState("");
-   const [password,setPassword]=useState("");
-   const {height}=useWindowDimensions();
-   const onSignInPressed =()=>{
-     console.log("Sign in")
-   }
-   const onForgetPassword=()=>{
-     console.warn("forget")
-   }
-   const onSignInGooglePressed=()=>{
-    console.warn("sign in")
-  }
-  const onSignUpPressed=()=>{
-    console.warn("onSignUpPress");
-  }
-  const SendUser = () =>{
-    axios.post('http://172.20.10.14:3000/api/user/signUp',{firstName:FirstName,lastName:LastName,email:Email,password:password,phone_number:PhoneNumber}).then((data)=>{
-      console.log("success", data)
-    }).catch((error)=>{
-      console.error("error", error)
-    })
+      console.log(result);
   
-  }
-  const [selectedValue, setSelectedValue] = useState("java");
+      if (!result.cancelled) {
+        setPicture(result.uri);
+      }
+    };
+  const onTermpress = () => {
+    console.warn("on T press");
+  };
+  const onPrivacypress = () => {
+    console.warn("on P press");
+  };
 
+
+  
   return (
     <ScrollView>
-    <View style={styles.root}>
-      <Image
-      source={Logo} 
-       style={[styles.Logo,{height:height * 0.3}]}
-       resizeMode="contain"
-       />
-    <CustomInput 
-    placeholder="FirstName"
-    value={FirstName}
-    setValue ={setFirstName}
-    />
-    <CustomInput 
-    placeholder="LastName"
-    value={LastName}
-    setValue ={setLastName}
-    />
-    <CustomInput 
-    placeholder="Email"
-    value={Email}
-    setValue ={setEmail}
-    />
-    <CustomInput 
-    placeholder="PhoneNumber"
-    value={PhoneNumber}
-    setValue ={setPhoneNumber}
-    keyboardType="numeric"
-    />
-  
-    <CustomInput
-    placeholder="password"
-    value={password}
-    setValue ={setPassword}
-    secureTextEntry={true}
-    />
-    
-
-    <CustomButton text="Sign In" onPress={SendUser}/>
-   
-     <CustomButton text="Sign In with Google" onPress={signIn} bgColor="#FAE9EA"fgColor="#DD4D44"/>
-    
-    </View>
-    <View style={{flex: 1,
-      alignItems: "center",
-    paddingBottom:49
-    }}>
-    <Picker
-      selectedValue={selectedValue}
-      style={{ height: 50, width: 150 }}
-      onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-    >
-      <Picker.Item label="Java" value="java" />
-      <Picker.Item label="JavaScript" value="js" />
-    </Picker>
-  </View>
+      <View style={styles.root}>
+        <Text style={styles.title}>Create an acount</Text>
+        <CustomInput
+          placeholder="username"
+          value={username}
+          setValue={setUsername}
+        />
+        <CustomInput placeholder="email" value={email} setValue={setEmail} />
+        <CustomInput
+          placeholder="password"
+          value={password}
+          setValue={setPassword}
+          secureTextEntry={true}
+        />
+        <CustomInput
+          placeholder="Repeat password"
+          value={passwordRepeat}
+          setValue={setPasswordRepeat}
+          secureTextEntry={true}
+        />
+        <CustomInput
+          placeholder="phone Number"
+          value={phone_number}
+          setValue={setPhone_number}
+        />
+        <CustomInput
+          placeholder="categorie"
+          value={categorie}
+          setValue={setCategorie}
+        />
+        <DatePicker
+          style={{ width: "100%" }}
+          placeholder="Select Date"
+          format="DD-MM-YYYY"
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          date={birthday}
+          onDateChange={(d)=> setBirthday(d)}
+        />
+        <CustomButton text="Choose Photo" onPress={choosePhoto} />
+        <CustomButton text="Register" onPress={onRegisterPressed} />
+        <Text style={styles.text}>
+          By registering, you confirm that you accept our{" "}
+          <Text style={styles.link} onPress={onTermpress}>
+            {" "}
+            Terms of Use{" "}
+          </Text>{" "}
+          and{" "}
+          <Text style={styles.link} onPress={onPrivacypress}>
+            {" "}
+            Privacy Policy{" "}
+          </Text>{" "}
+        </Text>
+       
+        <CustomButton
+          text="Sign In with Google"
+          onPress={onSignInGooglePressed}
+          bgColor="#FAE9EA"
+          fgColor="#DD4D44"
+        />
+        
+        
+      </View>
     </ScrollView>
-  )
-}
-const styles=StyleSheet.create({
-root :{
-  alignItems:'center',
-  padding:20
-},
-Logo:{
-  width:"70%",
-  maxWidth:300,
-  maxHeight:200,
-}
-})
-export default SignIn
+  );
+};
+const styles = StyleSheet.create({
+  root: {
+    alignItems: "center",
+    padding: 20,
+  },
+  title: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#051C60",
+    margin: 10,
+  },
+  text: {
+    color: "gray",
+    marginVertical: 10,
+  },
+  link: {
+    color: "#FDB075",
+  },
+});
+
+export default SignUp;

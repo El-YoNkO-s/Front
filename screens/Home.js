@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Dimensions, ScrollView, } from 'react-native';
-import { Button, Block, Text, Input, theme,Animated,View } from 'galio-framework';
+import { Button, Block, Text, Input, theme, Animated, View } from 'galio-framework';
 import { FontAwesome } from "@expo/vector-icons";
 import axios from 'axios';
 
@@ -14,7 +14,7 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data:[]
+      postdata: []
     }
   }
   renderSearch = () => {
@@ -28,11 +28,11 @@ export default class Home extends React.Component {
         style={styles.search}
         iconContent={iconCamera}
         placeholder="What are you looking for?"
-         onFocus={() => navigation.navigate()}
+        onFocus={() => navigation.navigate()}
       />
     )
   }
-  
+
   renderTabs = () => {
     const { navigation } = this.props;
 
@@ -49,52 +49,50 @@ export default class Home extends React.Component {
             <Icon size={16} name="camera-18" family="GalioExtra" style={{ paddingRight: 8 }} />
             <Text size={16} style={styles.tabTitle}>Best Deals</Text>
           </Block>
-          
+
         </Button>
       </Block>
     )
   }
- 
 
-  
-  
-  
+
+
+
+
 
   renderProducts = () => {
-    
+
     return (
       <ScrollView
-        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.products}>
-        
-        <Block flex>
-        
-          <Product product={products[0]} full
-          
-          />
-          <Block flex >
-            <Product product={products[1]} full />
-            <Product product={products[2]} full />
-          </Block>
-          <Product product={products[3]}  full />
-          
-          <Product product={products[4]} full />
-        
-        </Block>
-          
-          
-          
+
+
+        <Product ></Product>
+
+
+
+
+
 
       </ScrollView>
     )
-}
+  }
 
   render() {
     return (
       <Block flex center style={styles.home}>
         {this.renderProducts()}
+        {this.state.postdata.map((elem) => {
+          return (
+            <View>
+              <Text>{elem.post}</Text>
+              <Image style={{ height: 220, width: 220 }} source={{ uri: elem.picture }} />
+            </View>
+          )
+        })}
+
       </Block>
-      
+
     );
   }
   // list = () => {
@@ -116,9 +114,9 @@ export default class Home extends React.Component {
 
 const styles = StyleSheet.create({
   home: {
-    width: width,   
+    width: width,
     backgroundColor: '#222222'
-    
+
   },
   search: {
     height: 48,
@@ -143,7 +141,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginTop: 10,
     elevation: 4,
-    
+
   },
   tab: {
     backgroundColor: theme.COLORS.BLACK,
@@ -152,22 +150,22 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     height: 24,
     elevation: 0,
-    
+
   },
   tabTitle: {
     lineHeight: 19,
     fontWeight: '300'
-    
+
   },
   divider: {
     borderRightWidth: 0.3,
     borderRightColor: theme.COLORS.MUTED,
-    
+
   },
   products: {
     width: width - theme.SIZES.BASE * 2,
     paddingVertical: theme.SIZES.BASE * 2,
     marginBottom: 100,
-    
+
   },
 });

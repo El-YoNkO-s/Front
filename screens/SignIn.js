@@ -1,83 +1,101 @@
 import React,{useState} from "react";
-import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView} from "react-native"
+import axios from "axios";
+import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView,AsyncStorage} from "react-native"
 import Logo from "../assets/images/myLogo.png"
-import CustomInput from "../components/customInput/CustomInput"; 
+import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
-import axios from "axios"
-import * as Google from "expo-google-app-auth"
- const signIn = async () => {
-    try {
-      const result = await Google.logInAsync({
-        issuer: 'https://accounts.google.com',
-        scopes: ['profile'],
-        clientId: '295876176566-mc96ntau86p40omucvf52nu314u29upn.apps.googleusercontent.com',
-        iosId:"295876176566-m1a1tdb4kr26k54qs81p2d6hjtorlhqc.apps.googleusercontent.com"
-      });
+import * as Google from 'expo-google-app-auth';
+import { useNavigation } from "@react-navigation/native";
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
-      if (result.type === "success") {
-        this.setState({
-          signedIn: true,
-          username: result.user.name,
-          photoUrl: result.user.photoUrl
-        })
-      } else {
-        console.log("cancelled")
-      }
-    } catch (err) {
-      console.log("error", err)
-    }
-  }
-
+// import { NavigationActions } from "@react-navigation/compat";
 const SignIn = ()=>{
-  
-   const [Email,setUsername]=useState("");
+  const [userData,setUserData]=useState([])
    const [password,setPassword]=useState("");
+   const [email, setEmail] = useState("");
    const {height}=useWindowDimensions();
-   const onSignInPressed =()=>{
-     console.warn("Sign in")
-   }
+   const navigation = useNavigation();
+   const onSignInPressed =async ()=>{
+    axios
+    .post("http://192.168.22.241:3000/api/user/login", {
+      password,
+      email
+    })
+    .then( async (res)=>{
+      if(res.data ==="Email or password is incorrect!"){
+        console.log(data)
+        console.log(res.result)
+        console.warn("wrong password or email")
+      }else{
+console.log(res.data)
+await AsyncStorage.setItem("response",JSON.stringify(res.data))
+
+
+        navigation.navigate("Profile")
+      }
+    }).catch((err)=>console.log(err))
+ 
+
+};
+const getUserInfo=()=>{
+  axios.get()
+}
+
+
+
    const onForgetPassword=()=>{
      console.warn("forget")
    }
-   const onSignInGooglePressed=()=>{
-    console.warn("sign in")
+   const onSignInGooglePressed= async ()=>{
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: "43341331951-lvkbfsn9refima4il5cd3sh3c41o946a.apps.googleusercontent.com",
+        iosClientId: "43341331951-idk530b0a5e2t8r2fu4hhljspq0srmne.apps.googleusercontent.com",
+        scopes: ['profile', 'email'],
+      });
+  
+      if (result.type === 'success') {
+        return result.accessToken;
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      return { error: true };
+    }
   }
   const onSignUpPressed=()=>{
     console.warn("onSignUpPress");
   }
-  const GetSing = ()=>{
-    axios.post('http://172.20.10.14:3000/api/user/signIn',{email:Email,password:password}).then((data)=>{
-      console.log("Welcom",data)
-    }).catch((error)=>{
-      console.log("soory",error)
-    })
-  }
+
   return (
     <ScrollView>
     <View style={styles.root}>
       <Image
-      source={Logo} 
+      source={Logo}
        style={[styles.Logo,{height:height * 0.3}]}
        resizeMode="contain"
        />
-    <CustomInput 
-    placeholder="Email"
-    value={Email}
+    {/* <CustomInput 
+    placeholder="username"
+    value={username}
     setValue ={setUsername}
-    />
+    /> */}
+    <CustomInput placeholder="email" value={email} setValue={setEmail} />
     <CustomInput
     placeholder="password"
     value={password}
     setValue ={setPassword}
     secureTextEntry={true}
     />
-    <CustomButton text="Sign In" onPress={GetSing}/>
+     
+    <CustomButton text="Sign In" onPress={onSignInPressed}/>
     <CustomButton 
     text="Forgot password"
      onPress={onForgetPassword}
      type="TERTIARY"
+     
      />
-     <CustomButton text="Sign In with Google" onPress={signIn} bgColor="#FAE9EA"fgColor="#DD4D44"/>
+     <CustomButton text="Sign In with Google" onPress={onSignInGooglePressed} bgColor="#FAE9EA"fgColor="#DD4D44"/>
      <CustomButton 
     text="you don t have an acount ? Create one"
      onPress={onSignUpPressed}
