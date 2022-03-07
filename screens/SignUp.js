@@ -24,11 +24,12 @@ const SignUp = () => {
   const [categorie, setCategorie] = useState("");
   const [birthday, setBirthday] = useState("");
   const [picture,setPicture]=useState(0)
+  const [datause,setdatause] = useState([])
   const navigation = useNavigation();
 
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.11.221:3000/api/user/register", {
+      .post("http://192.168.22.241:3000/api/user/register", {
         username,
         password,
         email,
@@ -113,7 +114,6 @@ const SignUp = () => {
           value={phone_number}
           setValue={setPhone_number}
         />
-
         <CustomInput
           placeholder="categorie"
           value={categorie}

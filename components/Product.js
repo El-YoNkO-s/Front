@@ -1,6 +1,6 @@
 import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback,Button,TextInput,TouchableOpacity,value,View } from 'react-native';
+import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback, Button, TextInput, TouchableOpacity, value, View } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 import axios from 'axios'
 import materialTheme from '../constants/Theme';
@@ -8,8 +8,11 @@ const { width } = Dimensions.get('screen');
 class Product extends React.Component {
   state = {
     counter: 0,
-    comment : "",
-    data:[]
+    comment: "",
+    data: [],
+    postdata: [],
+    commentid: [],
+
   }
   onIncrement = () => {
     this.setState({
@@ -18,25 +21,39 @@ class Product extends React.Component {
     console.log(this.state.counter)
   };
   onChangeText = (key, val) => {
-    this.setState({ [key]: val})
+    this.setState({ [key]: val })
   }
-postcomment=()=>{
-  let options ={
-    des: this.state.comment
+  
+
+  componentDidMount() {
+    axios.get('http://192.168.22.241:3000/api/posts/getpost').then((result) => {
+      // console.log(result.data);
+      var s = result.data
+      // console.log(s)
+      s.map((elem)=>{
+        console.log(elem.id_Post)
+      })
+      this.setState({
+        postdata: result.data
+      })
+    })
+    axios.get("http://192.168.22.241:3000/api/items/getcomment/1").then((response) => {
+      console.log(response)
+      this.setState({
+        commentid:response.data
+      })
+    })
   }
-  axios.post('http://192.168.22.185:3000/api/items/postcomment',options).then((data)=>{
-    console.log(data)
-  })
-}
-componentDidMount() {
-  axios.get('http://192.168.22.185:3000/api/items/getcomment').then((data)=>{
-     console.log(data.data)
-     this.setState({
-       data:data.data
-     })
-    //  alert(data)
-})
-}
+  postcomment = () => {
+    let options = {
+      des: this.state.comment,
+      id_Post:this.state.postdata[0].id_Post
+    }
+    axios.post('http://192.168.22.241:3000/api/items/postcomment',options).then((response) => {
+      console.log(response)
+    })
+  }
+  
   render() {
     const { navigation, product, horizontal, full, style, priceColor, imageStyle } = this.props;
     const imageStyles = [styles.image, full ? styles.fullImage : styles.horizontalImage, imageStyle];
@@ -44,24 +61,32 @@ componentDidMount() {
       <Block row={horizontal} card flex style={[styles.product, styles.shadow, style]}>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Profile', { product: product })}>
           <Block flex style={[styles.imageContainer, styles.shadow]}>
-            {/* <Image source={{ uri: product.image }} style={imageStyles} /> */}
+            {this.state.postdata.map((elem) => {
+              return (
+                <View>
+                {this.state.commentid.map((elem) => {
+                  return <Text>{elem.des}</Text>
+                })}
+                  <Text style={{borderWidth:19}}>{elem.post}</Text>
+                  <Image style={{ height: 300, width: 300 }} source={{ uri: elem.picture }} />
+                  
+                  <Button
+                    title="Like" onPress={this.onIncrement} />
+                  <TextInput style={styles.input} onChangeText={val => this.onChangeText('comment', val)}
+                  />
+                  <TouchableOpacity style={styles.submitButton}>
+                  <Text style={styles.submitButtonText} onPress={this.postcomment}> Submit </Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            })}
           </Block>
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro', { product: product })}>
           <Block flex space="between" style={styles.productDescription}>
-            {/* <Text size={14} style={styles.productTitle}>{product.title}</Text> */}
-            {/* <Text size={12} muted={!priceColor} color={priceColor}>{product.price}</Text> */}
-            {this.state.data.map((elem)=>{
-              <Text>{elem.des}</Text>
-            })}
-            <Button
-            title="Like"  onPress={this.onIncrement}/>
-            <TextInput style = {styles.input} onChangeText={val => this.onChangeText('comment', val)}
-            />
-            <TouchableOpacity
-            style = {styles.submitButton}
-            >
-            <Text style = {styles.submitButtonText} onPress={this.postcomment}> Submit </Text></TouchableOpacity>
+           
+         
+
           </Block>
         </TouchableWithoutFeedback>
         <View>
@@ -83,14 +108,14 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 5,
     height: 40,
-    width:80
- },
+    width: 80
+  },
   input: {
     margin: 15,
     height: 40,
     borderColor: '#7A42F4',
     borderWidth: 1
- },
+  },
   productTitle: {
     flex: 1,
     flexWrap: 'wrap',
@@ -127,6 +152,7 @@ const styles = StyleSheet.create({
     left: 21
   }
 });
+
 
 
 

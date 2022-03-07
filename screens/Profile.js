@@ -28,7 +28,7 @@ async getUserInfo(){
 await AsyncStorage.getItem("response").then((res)=>{
 var x = JSON.parse(res)
 console.log("Hamady " , x.id_User)
-axios.get(`http://192.168.22.143:3000/api/user/info/${x.id_User}`).then(({data})=>{
+axios.get(`http://192.168.22.241:3000/api/user/info/${x.id_User}`).then(({data})=>{
   console.log('fffff',data)
   this.setState({
     user:data[0]
