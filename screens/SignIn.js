@@ -1,46 +1,51 @@
 import React,{useState} from "react";
 import axios from "axios";
-import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView} from "react-native"
+import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView,AsyncStorage} from "react-native"
 import Logo from "../assets/images/myLogo.png"
 import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
 import * as Google from 'expo-google-app-auth';
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import { NavigationActions } from "@react-navigation/compat";
 const SignIn = ()=>{
-  const [userdata,setuserdata] =useState([])
+  const [userData,setUserData]=useState([])
    const [password,setPassword]=useState("");
    const [email, setEmail] = useState("");
    const {height}=useWindowDimensions();
    const navigation = useNavigation();
-   const onSignInPressed = ()=>{
-     axios
+   const onSignInPressed =async ()=>{
+    axios
     .post("http://192.168.22.241:3000/api/user/login", {
       password,
       email
     })
-    .then ((res)=>{
+    .then( async (res)=>{
       if(res.data ==="Email or password is incorrect!"){
+        console.log(data)
         console.log(res.result)
-        console.log("wrong password or email")
-      }else {
-        AsyncStorage.getItem('res').then((datttt)=>{  
-          console("eee",datttt)
-        })
+        console.warn("wrong password or email")
+      }else{
+console.log(res.data)
+await AsyncStorage.setItem("response",JSON.stringify(res.data))
+
+
         navigation.navigate("Profile")
       }
     }).catch((err)=>console.log(err))
  
 
 };
-   
-   const onForgetPassword= ()=>{
-     var items = AsyncStorage.getItem('@store1:user').then((res)=>{
-       console.log(items)
-     })
-  }
+const getUserInfo=()=>{
+  axios.get()
+}
+
+
+
+   const onForgetPassword=()=>{
+     console.warn("forget")
+   }
    const onSignInGooglePressed= async ()=>{
     try {
       const result = await Google.logInAsync({

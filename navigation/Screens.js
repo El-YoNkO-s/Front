@@ -274,6 +274,9 @@ function AppStack(props) {
         name="Sign In"
         component={SignIn}
         options={{
+          header: ({ navigation, scene }) => (
+            <Header title="SignIn" scene={scene} navigation={navigation} />
+          ),
           drawerIcon: ({ focused }) => (
             <Icon
               size={16}
@@ -289,6 +292,7 @@ function AppStack(props) {
       name="Post"
       component={Post}
       options={{
+        
         drawerIcon: ({ focused }) => (
           <Icon
             size={16}
