@@ -7,7 +7,8 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  onPress
+  onPress,
+  AsyncStorage
 } from "react-native";
 import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
@@ -27,7 +28,7 @@ const SignUp = () => {
 
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.11.37:3000/api/user/register", {
+      .post("http://192.168.22.143:3000/api/user/register", {
         username,
         password,
         email,
@@ -37,15 +38,41 @@ const SignUp = () => {
         picture
         
       })
-      .then(() => navigation.navigate("Profile"))
+      .then( 
+       async (response) =>{
+       try{
+      await AsyncStorage.setItem("response",JSON.stringify(response))
+       navigation.navigate("SignIn") 
+       }catch(err){
+         console.log(err)
+       } 
+       
+      }
+      )
+      
       .catch((err) => console.log(err));
   };
   const onForgetPassword = () => {
     console.warn("forget");
   };
-  const onSignInGooglePressed = () => {
-    console.warn("sign in");
-  };
+  const onSignInGooglePressed = 
+    async ()=>{
+      try {
+        const result = await Google.logInAsync({
+          androidClientId: "43341331951-lvkbfsn9refima4il5cd3sh3c41o946a.apps.googleusercontent.com",
+          iosClientId: "43341331951-idk530b0a5e2t8r2fu4hhljspq0srmne.apps.googleusercontent.com",
+          scopes: ['profile', 'email'],
+        });
+    
+        if (result.type === 'success') {
+          return result.accessToken;
+        } else {
+          return { cancelled: true };
+        }
+      } catch (e) {
+        return { error: true };
+      }
+    };
   const choosePhoto = async () => {
       // No permissions request is necessary for launching the image library
       let result = await ImagePicker.launchImageLibraryAsync({

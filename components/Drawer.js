@@ -79,9 +79,7 @@ class DrawerItem extends React.Component {
     const { title } = this.props;
       return (
         <Block middle style={styles.pro}>
-          <Text size={12} color="white">
-            PRO
-          </Text>
+          
         </Block>
       );
     
@@ -146,12 +144,12 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOpacity: 0.2
   },
-  pro: {
-    backgroundColor: materialTheme.COLORS.LABEL,
-    paddingHorizontal: 6,
-    marginLeft: 8,
-    borderRadius: 2,
-    height: 16,
-    width: 36
-  }
+  // pro: {
+  //   backgroundColor: materialTheme.COLORS.LABEL,
+  //   paddingHorizontal: 6,
+  //   marginLeft: 8,
+  //   borderRadius: 2,
+  //   height: 16,
+  //   width: 36
+  // }
 });

@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import axios from "axios";
-import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView} from "react-native"
+import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView,AsyncStorage} from "react-native"
 import Logo from "../assets/images/myLogo.png"
 import CustomInput from "../components/customInput/CustomInput"; 
 import CustomButton from "../components/customButton/CusstomButton";
@@ -9,28 +9,39 @@ import { useNavigation } from "@react-navigation/native";
 
 // import { NavigationActions } from "@react-navigation/compat";
 const SignIn = ()=>{
+  const [userData,setUserData]=useState([])
    const [password,setPassword]=useState("");
    const [email, setEmail] = useState("");
    const {height}=useWindowDimensions();
    const navigation = useNavigation();
-   const onSignInPressed =()=>{
+   const onSignInPressed =async ()=>{
     axios
-    .post("http://192.168.11.37:3000/api/user/login", {
+    .post("http://192.168.22.143:3000/api/user/login", {
       password,
       email
     })
-    .then((res)=>{
+    .then( async (res)=>{
       if(res.data ==="Email or password is incorrect!"){
+        console.log(data)
         console.log(res.result)
         console.warn("wrong password or email")
       }else{
+console.log(res.data)
+await AsyncStorage.setItem("response",JSON.stringify(res.data))
+
+
         navigation.navigate("Profile")
       }
     }).catch((err)=>console.log(err))
  
 
 };
-   
+const getUserInfo=()=>{
+  axios.get()
+}
+
+
+
    const onForgetPassword=()=>{
      console.warn("forget")
    }
