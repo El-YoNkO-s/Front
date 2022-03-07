@@ -8,7 +8,7 @@ import {
   StyleSheet,
   ScrollView,
   onPress,
-  AsyncStorage
+  
 } from "react-native";
 import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
@@ -28,7 +28,7 @@ const SignUp = () => {
 
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.22.143:3000/api/user/register", {
+      .post("http://192.168.11.221:3000/api/user/register", {
         username,
         password,
         email,
@@ -38,18 +38,7 @@ const SignUp = () => {
         picture
         
       })
-      .then( 
-       async (response) =>{
-       try{
-      await AsyncStorage.setItem("response",JSON.stringify(response))
-       navigation.navigate("SignIn") 
-       }catch(err){
-         console.log(err)
-       } 
-       
-      }
-      )
-      
+      .then((response) => navigation.navigate("SignIn"))
       .catch((err) => console.log(err));
   };
   const onForgetPassword = () => {
