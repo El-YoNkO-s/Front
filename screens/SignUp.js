@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ScrollView,
   onPress,
+  Linking 
   
 } from "react-native";
 import CustomInput from "../components/customInput/CustomInput";
@@ -29,7 +30,7 @@ const SignUp = () => {
 
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.22.241:3000/api/user/register", {
+      .post("http://192.168.1.189:3000/api/user/register", {
         username,
         password,
         email,
@@ -130,6 +131,7 @@ const SignUp = () => {
         />
         <CustomButton text="Choose Photo" onPress={choosePhoto} />
         <CustomButton text="Register" onPress={onRegisterPressed} />
+        <CustomButton text="Pay" onPress={() => Linking.openURL('https://api.konnect.network/om4MUaN$A')} />
         <Text style={styles.text}>
           By registering, you confirm that you accept our{" "}
           <Text style={styles.link} onPress={onTermpress}>

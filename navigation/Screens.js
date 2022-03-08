@@ -1,5 +1,5 @@
 import React from 'react';
-import { Easing, Animated, Dimensions } from 'react-native';
+import { Easing, Animated, Dimensions,AsyncStorage } from 'react-native';
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
@@ -272,6 +272,24 @@ function AppStack(props) {
       />
       <Drawer.Screen
         name="Sign In"
+        component={SignIn}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header title="SignIn" scene={scene} navigation={navigation} />
+          ),
+          drawerIcon: ({ focused }) => (
+            <Icon
+              size={16}
+              name="ios-log-in"
+              family="ionicon"
+              color={focused ? "white" : materialTheme.COLORS.MUTED}
+              // style={{flex:1,backgroundColor:"#F9FBFC"}}
+            />
+          )
+        }}
+      />
+      <Drawer.Screen
+        name="Log Out"
         component={SignIn}
         options={{
           header: ({ navigation, scene }) => (

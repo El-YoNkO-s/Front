@@ -26,7 +26,7 @@ class Product extends React.Component {
   
 
   componentDidMount() {
-    axios.get('http://192.168.22.241:3000/api/posts/getpost').then((result) => {
+    axios.get('http://192.168.1.189:3000/api/posts/getpost').then((result) => {
       // console.log(result.data);
       var s = result.data
       // console.log(s)
@@ -37,7 +37,7 @@ class Product extends React.Component {
         postdata: result.data
       })
     })
-    axios.get("http://192.168.22.241:3000/api/items/getcomment/1").then((response) => {
+    axios.get("http://192.168.1.189:3000/api/items/getcomment/1").then((response) => {
       console.log(response)
       this.setState({
         commentid:response.data
@@ -48,8 +48,9 @@ class Product extends React.Component {
     let options = {
       des: this.state.comment,
       id_Post:this.state.postdata[0].id_Post
+      
     }
-    axios.post('http://192.168.22.241:3000/api/items/postcomment',options).then((response) => {
+    axios.post('http://192.168.1.189:3000/api/items/postcomment',options).then((response) => {
       console.log(response)
     })
   }
@@ -64,12 +65,12 @@ class Product extends React.Component {
             {this.state.postdata.map((elem) => {
               return (
                 <View>
-                {this.state.commentid.map((elem) => {
-                  return <Text>{elem.des}</Text>
-                })}
+                
                   <Text style={{borderWidth:19}}>{elem.post}</Text>
                   <Image style={{ height: 300, width: 300 }} source={{ uri: elem.picture }} />
-                  
+                  {this.state.commentid.map((elem) => {
+                    return <Text>{elem.des}</Text>
+                  })}
                   <Button
                     title="Like" onPress={this.onIncrement} />
                   <TextInput style={styles.input} onChangeText={val => this.onChangeText('comment', val)}
