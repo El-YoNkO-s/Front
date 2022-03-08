@@ -17,7 +17,7 @@ const SignIn = ()=>{
    const navigation = useNavigation();
    const onSignInPressed =async ()=>{
     axios
-    .post("http://192.168.1.189:3000/api/user/login", {
+    .post("http://192.168.1.106:3000/api/user/login", {
       password,
       email
     })

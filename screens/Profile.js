@@ -27,8 +27,8 @@ export default class Profile extends React.Component {
 async getUserInfo(){
 await AsyncStorage.getItem("response").then((res)=>{
 var x = JSON.parse(res)
-console.log("Hamady " , x.id_User)
-axios.get(`http://192.168.1.189:3000/api/user/info/${x.id_User}`).then(({data})=>{
+console.log( x.id_User)
+axios.get(`http://192.168.1.106/api/user/info/${x.id_User}`).then(({data})=>{
   console.log('fffff',data)
   this.setState({
     user:data[0]
