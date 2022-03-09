@@ -17,7 +17,7 @@ const SignIn = ()=>{
    const navigation = useNavigation();
    const onSignInPressed =async ()=>{
     axios
-    .post("http://192.168.1.106:3000/api/user/login", {
+    .post("http://192.168.22.200:3000/api/user/login", {
       password,
       email
     })
@@ -29,17 +29,15 @@ const SignIn = ()=>{
       }else{
 console.log(res.data)
 await AsyncStorage.setItem("response",JSON.stringify(res.data))
-
-
         navigation.navigate("Profile")
       }
     }).catch((err)=>console.log(err))
  
 
 };
-const getUserInfo=()=>{
-  axios.get()
-}
+// const getUserInfo=()=>{
+//   axios.get()
+// }
 
 
 

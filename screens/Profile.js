@@ -16,11 +16,13 @@ export default class Profile extends React.Component {
     super(props)
     this.state={
       user:[],
+      Myposts:[]
       
     }
    }
   componentDidMount(){
     this.getUserInfo()
+    this.getUserPost()
     // console.log(this.state.user)
   }
   
@@ -28,7 +30,7 @@ async getUserInfo(){
 await AsyncStorage.getItem("response").then((res)=>{
 var x = JSON.parse(res)
 console.log( x.id_User)
-axios.get(`http://192.168.1.106/api/user/info/${x.id_User}`).then(({data})=>{
+axios.get(`http://192.168.22.200:3000/api/user/info/${x.id_User}`).then(({data})=>{
   console.log('fffff',data)
   this.setState({
     user:data[0]
@@ -43,10 +45,27 @@ axios.get(`http://192.168.1.106/api/user/info/${x.id_User}`).then(({data})=>{
 
 }
 
-
+async getUserPost(){
+  await AsyncStorage.getItem("response").then((res)=>{
+  var x = JSON.parse(res)
+  console.log( x.id_User)
+  axios.get(`http://192.168.22.200:3000/api/posts/getUserPost/${x.id_User}`).then(({data})=>{
+    console.log("aaa",data)
+    this.setState({
+      Myposts:data
+    })
+    // console.log(this.state.user)
+  }).catch((err)=>{
+    console.log(err)
+  })
+  
+  
+  })
+  
+  }
 
 render() {
-  console.log("ggggg",this.state.user)
+  console.log(this.state.Myposts)
   return (
     <Block flex style={styles.profile}>
       <Block flex>
@@ -83,12 +102,12 @@ render() {
         <ScrollView showsVerticalScrollIndicator={false}>
           <Block row space="between" style={{ padding: theme.SIZES.BASE, }}>
             <Block middle>
-              <Text bold size={12} style={{marginBottom: 8}}>36</Text>
-              <Text muted size={12}>Orders</Text>
+              <Text bold size={12} style={{marginBottom: 8}}>6</Text>
+              <Text muted size={12}>Publication</Text>
             </Block>
             <Block middle>
               <Text bold size={12} style={{marginBottom: 8}}>5</Text>
-              <Text muted size={12}>Bids & Offers</Text>
+              <Text muted size={12}>Followers</Text>
             </Block>
             <Block middle>
               <Text bold size={12} style={{marginBottom: 8}}>2</Text>
@@ -101,14 +120,14 @@ render() {
           </Block>
           <Block style={{ paddingBottom: -HeaderHeight * 2 }}>
             <Block row space="between" style={{ flexWrap: 'wrap' }} >
-              {Images.Viewed.map((img, imgIndex) => (
-                <Image
-                  source={{ uri: img }}
-                  key={`viewed-${img}`}
+              {this.state.Myposts.map((post, index) => {
+              return <Image
+                  source={{ uri: post.picture }}
+                   key={index}
                   resizeMode="cover"
                   style={styles.thumb}
                 />
-              ))}
+              })}
             </Block>
           </Block>
         </ScrollView>

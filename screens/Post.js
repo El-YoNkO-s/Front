@@ -26,10 +26,11 @@ export default function ImagePickerExample() {
 
 
   };
+  
   const sentpost= async ()=> {
     await AsyncStorage.getItem("response").then((res)=>{
       var x = JSON.parse(res)
-      axios.post("http://192.168.1.189:3000/api/posts/Post",{
+      axios.post("http://192.168.22.200:3000/api/posts/Post",{
         post:text,
         picture:image,
         id_User:x.id_User

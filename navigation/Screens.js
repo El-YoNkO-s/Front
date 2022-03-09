@@ -23,10 +23,10 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const profile = {
-  avatar: Images.Profile,
-  name: "Ryan Rio",
-  type: "Producer",
-  plan: "Pro",
+  
+  name: "CineCast",
+  type: "",
+  plan: "",
   rating: 5,
   Follower:3
 };

@@ -30,7 +30,7 @@ const SignUp = () => {
 
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.1.106:3000/api/user/register", {
+      .post("http://192.168.22.200:3000/api/user/register", {
         username,
         password,
         email,
@@ -40,7 +40,7 @@ const SignUp = () => {
         picture
         
       })
-      .then((response) => navigation.navigate("SignIn"))
+      .then(() => navigation.navigate("SignIn"))
       .catch((err) => console.log(err));
   };
   const onForgetPassword = () => {
