@@ -2,10 +2,11 @@ import React,{useState} from "react";
 import axios from "axios";
 import {View ,Text,StyleSheet,Image, useWindowDimensions,onPress,ScrollView,AsyncStorage} from "react-native"
 import Logo from "../assets/images/myLogo.png"
-import CustomInput from "../components/customInput/CustomInput"; 
+import CustomInput from "../components/customInput/CustomInput";
 import CustomButton from "../components/customButton/CusstomButton";
 import * as Google from 'expo-google-app-auth';
 import { useNavigation } from "@react-navigation/native";
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import { NavigationActions } from "@react-navigation/compat";
 const SignIn = ()=>{
@@ -16,7 +17,7 @@ const SignIn = ()=>{
    const navigation = useNavigation();
    const onSignInPressed =async ()=>{
     axios
-    .post("http://192.168.22.143:3000/api/user/login", {
+    .post("http://192.168.22.200:3000/api/user/login", {
       password,
       email
     })
@@ -28,17 +29,15 @@ const SignIn = ()=>{
       }else{
 console.log(res.data)
 await AsyncStorage.setItem("response",JSON.stringify(res.data))
-
-
         navigation.navigate("Profile")
       }
     }).catch((err)=>console.log(err))
  
 
 };
-const getUserInfo=()=>{
-  axios.get()
-}
+// const getUserInfo=()=>{
+//   axios.get()
+// }
 
 
 
@@ -65,12 +64,12 @@ const getUserInfo=()=>{
   const onSignUpPressed=()=>{
     console.warn("onSignUpPress");
   }
-  
+
   return (
     <ScrollView>
     <View style={styles.root}>
       <Image
-      source={Logo} 
+      source={Logo}
        style={[styles.Logo,{height:height * 0.3}]}
        resizeMode="contain"
        />

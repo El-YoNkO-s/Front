@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableWithoutFeedback, ScrollView, StyleSheet, Image } from "react-native";
+import { TouchableWithoutFeedback, ScrollView, StyleSheet, Image,AsyncStorage } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 import { useSafeArea } from "react-native-safe-area-context";
 
@@ -7,7 +7,9 @@ import { Icon, Drawer as DrawerCustomItem } from '../components/';
 import { Images, materialTheme } from "../constants/";
 
 
-
+logout =()=>{
+  AsyncStorage.clear()
+}
 function CustomDrawerContent({
   drawerPosition,
   navigation,
@@ -26,6 +28,7 @@ function CustomDrawerContent({
     "Profile",
     "Settings",
     "Components",
+    "Log Out"
   ];
   return (
     <Block
@@ -92,6 +95,12 @@ function CustomDrawerContent({
           title="Sign Up"
           navigation={navigation}
           focused={state.index === 9 ? true : false}
+        />
+        <DrawerCustomItem
+          title="Log out"
+          navigation={navigation}
+          focused={state.index === 9 ? true : false}
+          onPress={logout}
         />
 
       </Block>
