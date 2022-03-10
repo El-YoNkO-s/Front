@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Image, View, Platform, ScrollView, StyleSheet, TextInput ,Alert,SafeAreaView,AsyncStorage} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios'
+import { useNavigation } from "@react-navigation/native";
+
 export default function ImagePickerExample() {
 
   const [image, setImage] = useState(null);
@@ -23,13 +25,15 @@ export default function ImagePickerExample() {
     if (!result.cancelled) {
       setImage(result.uri);
     }
+    navigation.navigate("Home")
 
 
   };
+  
   const sentpost= async ()=> {
     await AsyncStorage.getItem("response").then((res)=>{
       var x = JSON.parse(res)
-      axios.post("http://192.168.1.189:3000/api/posts/Post",{
+      axios.post("http://192.168.22.214:3000/api/posts/Post",{
         post:text,
         picture:image,
         id_User:x.id_User
