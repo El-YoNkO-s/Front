@@ -15,46 +15,50 @@ class Product extends React.Component {
 
   }
   onIncrement = () => {
-    this.setState({
-      counter: this.state.counter + 1,
-    })
+    if(this.state.counter === 1){
+      this.state.counter = 0
+    }else{ 
+  this.setState({
+    counter:this.state.counter ++
+  })
+    }
     console.log(this.state.counter)
   };
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
   }
-  
+
 
   componentDidMount() {
-    axios.get('http://192.168.22.200:3000/api/posts/getpost').then((result) => {
+    axios.get('http://192.168.22.214:3000/api/posts/getpostusername').then((result) => {
       // console.log(result.data);
       var s = result.data
       // console.log(s)
-      s.map((elem)=>{
+      s.map((elem) => {
         console.log(elem.id_Post)
       })
       this.setState({
         postdata: result.data
       })
     })
-    axios.get("http://192.168.22.200:3000/api/items/getcomment/1").then((response) => {
+    axios.get("http://192.168.22.214:3000/api/items/getcomment/1").then((response) => {
       console.log(response)
       this.setState({
-        commentid:response.data
+        commentid: response.data
       })
     })
   }
   postcomment = () => {
     let options = {
       des: this.state.comment,
-      id_Post:this.state.postdata[0].id_Post
-      
+      id_Post: this.state.postdata[0].id_Post
+
     }
-    axios.post('http://192.168.22.200:3000/api/items/postcomment',options).then((response) => {
+    axios.post('http://192.168.22.214:3000/api/items/postcomment', options).then((response) => {
       console.log(response)
     })
   }
-  
+
   render() {
     const { navigation, product, horizontal, full, style, priceColor, imageStyle } = this.props;
     const imageStyles = [styles.image, full ? styles.fullImage : styles.horizontalImage, imageStyle];
@@ -65,18 +69,27 @@ class Product extends React.Component {
             {this.state.postdata.map((elem) => {
               return (
                 <View>
-                
-                  <Text style={{borderWidth:19}}>{elem.post}</Text>
-                  <Image style={{ height: 300, width: 300 }} source={{ uri: elem.picture }} />
+                  <Text style={{ fontSize: 20, }}>User:{elem.username}</Text>
+
+                  <Text style={{ borderWidth:3 }}>{elem.post}</Text>
+                  <View
+                    style={{
+                      borderBottomColor: 'Blue',
+                      borderBottomWidth: 1,
+                    }}
+                  />
+
+                  <Image style={{ height: 300, width: 300,marginLeft:20 }} source={{ uri: elem.picture }} />
+
                   {this.state.commentid.map((elem) => {
                     return <Text>{elem.des}</Text>
                   })}
-                  <Button
+                  <Button style={styles.jdida}
                     title="Like" onPress={this.onIncrement} />
                   <TextInput style={styles.input} onChangeText={val => this.onChangeText('comment', val)}
                   />
                   <TouchableOpacity style={styles.submitButton}>
-                  <Text style={styles.submitButtonText} onPress={this.postcomment}> Submit </Text>
+                    <Text style={styles.submitButtonText} onPress={this.postcomment}> Submit </Text>
                   </TouchableOpacity>
                 </View>
               )
@@ -85,8 +98,8 @@ class Product extends React.Component {
         </TouchableWithoutFeedback>
         <TouchableWithoutFeedback onPress={() => navigation.navigate('Pro', { product: product })}>
           <Block flex space="between" style={styles.productDescription}>
-           
-         
+
+
 
           </Block>
         </TouchableWithoutFeedback>
@@ -107,15 +120,23 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: '#7A42F4',
     padding: 10,
-    margin: 5,
+    margin: 12,
     height: 40,
-    width: 80
+    width: 80,
+    marginLeft: 248,
+    marginTop: -56
+
   },
   input: {
     margin: 15,
     height: 40,
     borderColor: '#7A42F4',
     borderWidth: 1
+  },
+  innerText: {
+    color: 'red',
+    fontWeight: 'bold'
+
   },
   productTitle: {
     flex: 1,

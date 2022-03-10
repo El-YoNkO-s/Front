@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, Switch, FlatList, Platform, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Switch, FlatList, Platform, TouchableOpacity, View,Linking,onPress } from "react-native";
 import { Block, Text, theme, Icon } from "galio-framework";
+import CustomButton from "../components/customButton/CusstomButton";
+
 
 import materialTheme from '../constants/Theme';
 
@@ -50,7 +52,7 @@ export default class Settings extends React.Component {
 
     const payment = [
       { title: "Manage Payment Options", id: "Payment", type: "button" },
-      { title: "Manage Gift Cards", id: "gift", type: "button" },
+      // { title: "Manage Gift Cards", id: "gift", type: "button" },
     ];
     
     const privacy = [
@@ -90,7 +92,10 @@ export default class Settings extends React.Component {
           data={payment}
           keyExtractor={(item, index) => item.id}
           renderItem={this.renderItem}
+          
         />
+        <CustomButton text="Pay" onPress={() => Linking.openURL('https://api.konnect.network/om4MUaN$A')} />
+
         <Block style={styles.title}>
           <Text bold center size={theme.SIZES.BASE} style={{ paddingBottom: 5 }}>
           Privacy Settings

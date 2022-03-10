@@ -23,12 +23,8 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const profile = {
-  
-  name: "CineCast",
-  type: "",
-  plan: "",
-  rating: 5,
-  Follower:3
+  name: "CiniCast",
+
 };
 
 
