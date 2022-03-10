@@ -37,9 +37,9 @@ await AsyncStorage.setItem("response",JSON.stringify(res.data))
  
 
 };
-const getUserInfo=()=>{
-  axios.get()
-}
+// const getUserInfo=()=>{
+//   axios.get()
+// }
 
 
 

@@ -29,6 +29,7 @@ export default function ImagePickerExample() {
 
 
   };
+  
   const sentpost= async ()=> {
     await AsyncStorage.getItem("response").then((res)=>{
       var x = JSON.parse(res)

@@ -40,7 +40,7 @@ const SignUp = () => {
         picture
         
       })
-      .then((response) => navigation.navigate("SignIn"))
+      .then(() => navigation.navigate("SignIn"))
       .catch((err) => console.log(err));
   };
   const onForgetPassword = () => {
