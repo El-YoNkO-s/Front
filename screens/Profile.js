@@ -22,6 +22,7 @@ export default class Profile extends React.Component {
    }
   componentDidMount(){
     this.getUserInfo()
+    this.getUserPost()
     // console.log(this.state.user)
   }
   
@@ -29,7 +30,7 @@ async getUserInfo(){
 await AsyncStorage.getItem("response").then((res)=>{
 var x = JSON.parse(res)
 console.log("Hamady " , x.id_User)
-axios.get(`http://192.168.22.214:3000/api/user/info/${x.id_User}`).then(({data})=>{
+axios.get(`http://172.20.10.14:3000/api/user/info/${x.id_User}`).then(({data})=>{
   console.log('fffff',data)
   this.setState({
     user:data[0]
@@ -48,7 +49,7 @@ async getUserPost(){
   await AsyncStorage.getItem("response").then((res)=>{
   var x = JSON.parse(res)
   console.log( x.id_User)
-  axios.get(`http://192.168.22.214:3000/api/posts/getUserPost/${x.id_User}`).then(({data})=>{
+  axios.get(`http://172.20.10.14:3000/api/posts/getUserPost/${x.id_User}`).then(({data})=>{
     console.log("aaa",data)
     this.setState({
       Myposts:data

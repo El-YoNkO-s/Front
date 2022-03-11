@@ -1,9 +1,12 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback, Button, TextInput, TouchableOpacity, value, View } from 'react-native';
+import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback, Button, TextInput, TouchableOpacity, value, View,Pressable  } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 import axios from 'axios'
 import materialTheme from '../constants/Theme';
+import { MaterialCommunityIcons,Ionicons  } from "@expo/vector-icons";
+
+
 const { width } = Dimensions.get('screen');
 class Product extends React.Component {
   state = {
@@ -12,7 +15,8 @@ class Product extends React.Component {
     data: [],
     postdata: [],
     commentid: [],
-
+    liked:false
+    
   }
   onIncrement = () => {
     if(this.state.counter === 1){
@@ -27,10 +31,10 @@ class Product extends React.Component {
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
   }
-
+  
 
   componentDidMount() {
-    axios.get('http://192.168.22.214:3000/api/posts/getpostusername').then((result) => {
+    axios.get('http://172.20.10.14:3000/api/posts/getpostusername').then((result) => {
       // console.log(result.data);
       var s = result.data
       // console.log(s)
@@ -41,20 +45,25 @@ class Product extends React.Component {
         postdata: result.data
       })
     })
-    axios.get("http://192.168.22.214:3000/api/items/getcomment/1").then((response) => {
+    axios.get("http://172.20.10.14:3000/api/items/getcomment/1").then((response) => {
       console.log(response)
       this.setState({
         commentid: response.data
       })
     })
   }
+  LikeButton = () => {
+   this.setState({
+      liked:!this.state.liked
+    })
+  }  
   postcomment = () => {
     let options = {
       des: this.state.comment,
       id_Post: this.state.postdata[0].id_Post
 
     }
-    axios.post('http://192.168.22.214:3000/api/items/postcomment', options).then((response) => {
+    axios.post('http://172.20.10.14:3000/api/items/postcomment', options).then((response) => {
       console.log(response)
     })
   }
@@ -69,8 +78,7 @@ class Product extends React.Component {
             {this.state.postdata.map((elem) => {
               return (
                 <View>
-                  <Text style={{ fontSize: 20, }}>User:{elem.username}</Text>
-
+                  <Text style={{ fontSize: 20, }}>{elem.username}</Text>
                   <Text style={{ borderWidth:3 }}>{elem.post}</Text>
                   <View
                     style={{
@@ -80,17 +88,17 @@ class Product extends React.Component {
                   />
 
                   <Image style={{ height: 300, width: 300,marginLeft:20 }} source={{ uri: elem.picture }} />
-
                   {this.state.commentid.map((elem) => {
                     return <Text>{elem.des}</Text>
                   })}
-                  <Button style={styles.jdida}
-                    title="Like" onPress={this.onIncrement} />
-                  <TextInput style={styles.input} onChangeText={val => this.onChangeText('comment', val)}
-                  />
-                  <TouchableOpacity style={styles.submitButton}>
-                    <Text style={styles.submitButtonText} onPress={this.postcomment}> Submit </Text>
-                  </TouchableOpacity>
+                  <Ionicons name="md-chatbox-outline" size={30} color="black" style={{marginLeft:50}} onPress={() => navigation.navigate('Pro', { product: product })}/>
+                  <Pressable onPress={this.LikeButton}>
+      <MaterialCommunityIcons
+        name={this.state.liked ? "heart" : "heart-outline"}
+        size={34}
+        color={this.state.liked ? "red" : "black"}
+      style={{marginTop:-33}}/>
+    </Pressable>
                 </View>
               )
             })}

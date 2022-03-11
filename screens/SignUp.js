@@ -30,7 +30,7 @@ const SignUp = () => {
 
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.22.214:3000/api/user/register", {
+      .post("http://172.20.10.14:3000/api/user/register", {
         username,
         password,
         email,
