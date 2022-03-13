@@ -64,7 +64,7 @@ await AsyncStorage.setItem("response",JSON.stringify(res.data))
     }
   }
   const onSignUpPressed=()=>{
-    console.warn("onSignUpPress");
+    navigation.navigate('App', { screen: 'Sign Up' });
   }
 
   return (
