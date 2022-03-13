@@ -27,7 +27,6 @@ function CustomDrawerContent({
     // "Sign In",
     "Profile",
     "Settings",
-    "Components",
     "Log Out"
   ];
   return (
@@ -86,22 +85,7 @@ function CustomDrawerContent({
         </ScrollView>
       </Block>
       <Block flex={0.3} style={{ paddingLeft: 7, paddingRight: 14 }}>
-        <DrawerCustomItem
-          title="Sign In"
-          navigation={navigation}
-          focused={state.index === 8 ? true : false}
-        />
-        <DrawerCustomItem
-          title="Sign Up"
-          navigation={navigation}
-          focused={state.index === 9 ? true : false}
-        />
-        <DrawerCustomItem
-          title="Log out"
-          navigation={navigation}
-          focused={state.index === 9 ? true : false}
-          onPress={logout}
-        />
+
 
       </Block>
     </Block>

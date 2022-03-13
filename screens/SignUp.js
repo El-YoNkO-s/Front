@@ -30,7 +30,7 @@ const SignUp = () => {
 
   const onRegisterPressed = () => {
     axios
-      .post("http://192.168.22.214:3000/api/user/register", {
+      .post("http://172.20.10.14:3000/api/user/register", {
         username,
         password,
         email,
@@ -40,7 +40,7 @@ const SignUp = () => {
         picture
         
       })
-      .then(() => navigation.navigate("SignIn"))
+      .then(() =>navigation.navigate('App', { screen: 'Sign In' }))
       .catch((err) => console.log(err));
   };
   const onForgetPassword = () => {
@@ -150,7 +150,8 @@ const SignUp = () => {
           bgColor="#FAE9EA"
           fgColor="#DD4D44"
         />
-        
+        <CustomButton text="Sign In" onPress={() => navigation.navigate('App', { screen: 'Sign In' })} />
+
         
       </View>
     </ScrollView>

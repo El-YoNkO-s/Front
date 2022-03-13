@@ -26,6 +26,9 @@ const profile = {
   name: "CiniCast",
 
 };
+logout =()=>{
+  AsyncStorage.clear()
+}
 
 
 function ProfileStack(props) {
@@ -287,6 +290,7 @@ function AppStack(props) {
       <Drawer.Screen
         name="Log Out"
         component={SignIn}
+        onPress={logout}
         options={{
           header: ({ navigation, scene }) => (
             <Header title="SignIn" scene={scene} navigation={navigation} />
@@ -349,6 +353,7 @@ export default function OnboardingStack(props) {
     </Stack.Navigator>
   );
 }
+
 
 /*
 const ProfileStack = createStackNavigator({
